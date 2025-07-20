@@ -1,0 +1,143 @@
+Pgsql
+
+radiologuim/
+??? public/
+?   ??? index.html
+??? src/
+?   ??? main.jsx
+?   ??? RadiationCalculator.jsx
+??? package.json
+??? vite.config.js
+??? vercel.json
+
+?? /public/index.html
+html
+CopyEdit
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Radiologu Im – Suela Hoxhaj</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
+?? /src/main.jsx
+jsx
+CopyEdit
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import RadiationCalculator from './RadiationCalculator';
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <RadiationCalculator />
+  </React.StrictMode>
+);
+?? /src/RadiationCalculator.jsx
+jsx
+CopyEdit
+/**
+ * © 2025 Suela Hoxhaj. Të gjitha të drejtat e rezervuara.
+ * Zhvilluar nga Suela Hoxhaj si pjesë e një platforme shëndetësore për transparencë radiologjike.
+ */
+import { useState } from "react";
+
+export default function RadiationCalculator() {
+  const [age, setAge] = useState(30);
+  const [gender, setGender] = useState("female");
+  const [ctChest, setCtChest] = useState(0);
+  const [ctBrain, setCtBrain] = useState(0);
+  const [xray, setXray] = useState(0);
+  const [petCt, setPetCt] = useState(0);
+  const [fluoroscopy, setFluoroscopy] = useState(0);
+  const [totalDose, setTotalDose] = useState(0);
+  const [risk, setRisk] = useState(0);
+
+  const calculateDoseAndRisk = () => {
+    const dose = ctChest * 7 + ctBrain * 2 + xray * 0.1 + petCt * 25 + fluoroscopy * 5;
+    setTotalDose(dose);
+    let baseRisk = gender === "female" ? dose * 0.013 : dose * 0.01;
+    setRisk(baseRisk.toFixed(2));
+  };
+
+  return (
+    <div style={{ maxWidth: '600px', margin: '2rem auto', padding: '1rem', fontFamily: 'Arial' }}>
+      <h1>Radiologu Im – © 2025 Suela Hoxhaj</h1>
+      <div>
+        <label>Mosha: </label>
+        <input type="number" value={age} onChange={(e) => setAge(e.target.value)} /><br />
+        <label>Gjinia: </label>
+        <select value={gender} onChange={(e) => setGender(e.target.value)}>
+          <option value="female">Femër</option>
+          <option value="male">Mashkull</option>
+        </select><br />
+        <label>CT Gjoksi: </label>
+        <input type="number" value={ctChest} onChange={(e) => setCtChest(+e.target.value)} /><br />
+        <label>CT Truri: </label>
+        <input type="number" value={ctBrain} onChange={(e) => setCtBrain(+e.target.value)} /><br />
+        <label>Rreze X: </label>
+        <input type="number" value={xray} onChange={(e) => setXray(+e.target.value)} /><br />
+        <label>PET-CT: </label>
+        <input type="number" value={petCt} onChange={(e) => setPetCt(+e.target.value)} /><br />
+        <label>Fluoroskopi: </label>
+        <input type="number" value={fluoroscopy} onChange={(e) => setFluoroscopy(+e.target.value)} /><br />
+        <button onClick={calculateDoseAndRisk}>Llogarit</button>
+      </div>
+      <div style={{ marginTop: '1rem' }}>
+        <p><strong>Doza totale:</strong> {totalDose} mSv</p>
+        <p><strong>Rreziku i llogaritur:</strong> {risk}%</p>
+      </div>
+      <footer style={{ marginTop: '2rem', fontSize: '0.8rem', color: '#555' }}>
+        © 2025 Suela Hoxhaj – Të gjitha të drejtat e rezervuara
+      </footer>
+    </div>
+  );
+}
+?? package.json
+json
+CopyEdit
+{
+  "name": "radiologuim",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "vite": "^4.3.0",
+    "@vitejs/plugin-react": "^4.0.0"
+  }
+}
+
+?? vite.config.js
+js
+CopyEdit
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig({
+  plugins: [react()],
+  root: '.',
+  build: {
+    outDir: 'dist',
+  },
+})
+
+?? vercel.json
+json
+CopyEdit
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite"
+}
+
